@@ -1,0 +1,189 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+ {% block top %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/css.css' %}" type="text/css" />
+ {% endblock %}
+{% block boday %}
+<div id="particles-js"></div>
+<div id = 'myapp'>
+    <div class="index-main" >
+        <div class="index-main-body">
+                <div class="index-header">
+                    <h1 class="logo hide-text">东方女人</h1>
+                    <h2 class="subtitle">您身边的美容美体专家</h2>
+                </div>
+            <div class="desk-front sign-flow sign-flow clearfix sign-flow-simple">
+                <div class="index-tab-navs">
+                    <div class="navs-slider" v-bind:data-active-index="isActive" >
+                            <div v-bind:class="{active:isActive == 0}" v-on:click="isActive =0">注册</div>
+                        <div v-bind:class="{active:isActive == 1}" v-on:click="isActive =1">登录</div>
+                        <span class="navs-slider-bar"></span>
+                    </div>
+                </div>
+                <div class="view view-signup select_hide" :class="{select:isActive == 0}">
+                    <form class="zu-side-login-box"  id="sign-form-1"
+                    autocomplete="off" method="POST" novalidate="novalidate">
+                        {% csrf_token %}
+                        <div class="group-inputs">
+                        <div class="name input-wrapper">
+                        <input required="" type="text" name="user_name" v-model="reg.name" aria-label="姓名" placeholder="姓名 (不少于8位)" value="{{ username }}">
+                            {# 通过错误控制显示#}
+                        <span class="error_span" :text-content.prop="reg.my_error.name_error" :class="{show_error:reg.my_error.name_error}"> </span>
+                        </div>
+                        <div class="email input-wrapper">
+                        <input required="" type="text" class="account" v-model="reg.phone" name="phone_num" aria-label="手机号" placeholder="手机号">
+                        <span class="error_span" :text-content.prop="reg.my_error.phone_error" :class="{show_error:reg.my_error.phone_error}"> </span>
+                        </div>
+                        <div class="input-wrapper">
+                        <input required="" type="password" name="pass_word" v-model="reg.password"  aria-label="密码" placeholder="密码（不少于 8 位）" autocomplete="off">
+                        <span class="error_span" :text-content.prop="reg.my_error.password_error" :class="{show_error:reg.my_error.password_error}"> </span>
+                        </div>
+
+                        </div>
+                        <div class="button-wrapper command">
+                            <button class="sign-button submit" type="submit" v-on:click="register">注册东方女人</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="view view-signup select_hide" :class="{select:isActive == 1}">
+                    <form class="zu-side-login-box" id="sign-form-1"
+                    autocomplete="off" method="POST" novalidate="novalidate" action="{% url 'users:login_handle' %}">
+                        {% csrf_token %}
+                        <div class="group-inputs">
+                        <div class="name input-wrapper">
+                        <input required="" type="text" v-model="reg.login_name" name="login_user_name" aria-label="姓名" placeholder="姓名 (不少于8位)" value="{{ username }}">
+                        <span class="error_span" :text-content.prop="reg.my_error.login_name_error" :class="{show_error:reg.my_error.login_name_error}"> </span>
+                        </div>
+                        <div class="input-wrapper">
+                        <input required="" type="password" v-model="reg.login_pass_word"  name="login_pass_word" aria-label="密码" placeholder="密码（不少于 8 位）" autocomplete="off">
+                        <span class="error_span" :text-content.prop="reg.my_error.login_password_error" :class="{show_error:reg.my_error.login_password_error}"> </span>
+                        </div>
+
+                        </div>
+                        <div class="button-wrapper command">
+                            <button class="sign-button submit" type="submit">登录东方女人</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" v-bind:class="{in:isShow == 1,over:isHidden == 1}" id="modalDefault"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span v-on:click="toggle">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">恭喜注册东方女人成功</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p>
+                        您已经成功注册东方女人,请登录
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="toggle">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" v-bind:class="{in:isShow == 1,over:isHidden == 1}"></div>
+</div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        var post_error={
+                name_error:'',
+                phone_error:'',
+                password_error:'',
+                login_name_error:'',
+                login_password_error:''
+         };
+        $(function(){
+            var isActive={{ isActive }};
+            var isShow = 0; //为1的时候显示
+            var isHidden = 1; //为1的时候更改z-index 为1
+            var csrf_token='{{ csrf_token }}';
+
+            post_error.login_password_error = '{{ message.login_user_pass }}';
+            post_error.login_name_error = '{{ message.login_user_name }}';
+            if(post_error.login_password_error || post_error.login_name_error){
+                isActive = 1
+            }
+            $.get('user/login',function(data){
+
+            });
+            var myapp = new Vue({
+                el:'#myapp',
+                data:{
+                    isActive:isActive,
+                    isShow:isShow,
+                    isHidden:isHidden,
+                    reg:{
+                        name:'',
+                        phone:'',
+                        password:'',
+                        login_pass_word:'',
+                        login_name:'',
+                        my_error:post_error
+                    }
+                },
+                methods:{
+                    toggle:function(){
+
+                        if(this.isShow === 1){
+                            this.isShow =0;
+                            setTimeout(function(){
+                                myapp.isHidden = 1
+                            },500)
+                        }else{
+                            this.isShow=1;
+                            this.isHidden = 0
+                        }
+                    },
+                    register:function(event){
+                        if(!check_log(this.reg.name,this.reg.phone,this.reg.password)){
+                            this.reg.my_error=post_error;
+                            event.preventDefault()
+                        }else{
+                            event.preventDefault();
+                            url ='{% url 'users:register_handle' %}';
+
+                            data= {
+                                'user_name':this.reg.name,
+                                'phone_num':this.reg.phone,
+                                'pass_word':this.reg.password,
+                                //c
+                                'csrfmiddlewaretoken':csrf_token
+                            };
+
+                            type = 'post';
+                            var func= function (data){
+                                 if(data.code === 200){
+
+                                    //通过vue控制页面显示
+                                    myapp.isActive = 1;
+                                    myapp.isShow = 1;
+                                    myapp.isHidden = 0;
+                                }else if(data.code === 300){
+                                    post_error.name_error = data.message.user_name;
+                                    post_error.phone_error = data.message.user_phone;
+                                    post_error.password_error = data.message.user_pass;
+
+                                }
+                            };
+                            my_ajax(url,type,data,func);
+                        }
+                    }
+                }
+            });
+{#            $('.submit').click(function(){#}
+{#                console.log(myapp.$data.isActive);#}
+{#                return false#}
+{#            })#}
+            wrappers_load()
+        });
+
+    </script>
+{% endblock %}

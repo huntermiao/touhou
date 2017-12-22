@@ -1,0 +1,119 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+{% block title %}用户首页{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                    <div class="page-title">
+                        <span class="title">所有用户</span>
+                        <div class="description">All users.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <div class="card-title">
+                                    <div class="title">用户</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table">
+
+                                        <thead>
+                                            <tr>
+                                                <th>用户id</th>
+                                                <th>用户名</th>
+                                                <th>用户手机</th>
+                                                <th>用户消费</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% load users_filters %}
+                                            {% for user in current_data %}
+                                            <tr>
+                                                <th scope="row">{{ user.id }}</th>
+                                                <td>{{ user.user_name }}</td>
+                                                <td>{{ user.user_phone }}</td>
+                                                <td>{{ user | user_consumption }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate" style="text-align:right">
+                        <ul class="pagination">
+                            {% if current_data.has_previous %}
+                            <li class="paginate_button previous " id="DataTables_Table_0_previous">
+                            <a href="?page={{ current_data.previous_page_number }}" >上一页</a>
+                            </li>
+                            {% else %}
+                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                <span >上一页</span>
+                                </li>
+                            {% endif %}
+                            {% for index in paginator.page_range %}
+                                {% if index == current_data.number %}
+{#                                    获取当前选择的页面的页码#}
+                                    <li class="paginate_button active">
+                                        <a href="?page={{ index }}">{{ index }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="paginate_button ">
+                                        <a href="?page={{ index }}" >{{ index }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if current_data.has_next %}
+                            <li class="paginate_button next" id="DataTables_Table_0_next">
+                                <a href="?page={{ current_data.next_page_number }}" >下一页</a>
+                            </li>
+                            {% else %}
+                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
+                                <span >下一页</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+        </div>
+</div>
+{% endblock %}
+{% block model_script %}
+
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(function(){
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+
+                 }
+             })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,321 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <script type="text/javascript" src="{% static 'tinymce/tiny_mce.js' %}"></script>
+{% endblock %}
+{% block title %}销售数据录入{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                <div class="page-title">
+                    <span class="title">销售数据录入</span>
+                    <div class="description">通过上传数据进行产品数据录入/批量录入</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="title">录入库存数据</div>
+                                </div>
+                            </div>
+                            <div class="card-body no-padding">
+                                <div role="tabpanel">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">单条录入</a></li>
+                                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">批量导入</a></li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="home">
+                                            <div v-if="!is_search" class="no_search">
+                                                <input placeholder="请输入产品名/编号,开始搜索" @keydown.enter="submit" v-model="search_key">
+                                            </div>
+                                            <table :class='{tb_show:is_search}' class="table tb_hide table-hover" cellspacing="0" width="100%" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                                <thead>
+                                                    <tr role="row">
+                                                        <th class="sorting"  >产品图片</th>
+                                                        <th class="sorting_asc" >产品编号</th>
+                                                        <th class="sorting"   >产品名</th>
+                                                        <th class="sorting"   >产品价格</th>
+                                                        <th class="sorting"  >产品库存</th>
+                                                        <th class="sorting"  >产品描述</th>
+                                                        <th class="sorting"  >添加销售记录</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% verbatim myblock %}
+                                                     <tr v-for = '(itme,index) in search_date' class="odd">
+
+                                                          <td>
+                                                            <img :src="itme.pro_img">
+                                                          </td>
+                                                          <td>
+                                                             {{ itme.pro_num }}
+                                                          </td>
+                                                          <td>
+                                                             {{ itme.pro_name }}
+                                                          </td>
+
+                                                         <td>
+                                                             {{ itme.pro_price }}/{{ itme.pro_units }}
+                                                          </td>
+                                                          <td>
+                                                             {{ itme.sto_stock }}
+                                                          </td>
+                                                         <td>
+                                                             {{ itme.pro_short }}
+                                                         </td>
+                                                         <td>
+                                                             <span class="click_me" @click="one_sale(index)" data-toggle="modal" data-target="#modalDefault">点击增加此商品销售记录</span>
+                                                          </td>
+                                                     </tr>
+                                                     <tr v-if="!search_date">
+                                                        <td class="sorting_1" colspan="6" style="text-align: center">暂无数据</td>
+                                                     </tr>
+                                                {% endverbatim myblock %}
+
+                                                </tbody>
+                                            </table>
+                                            <div class="loading" :class="{loading_hide:search_end}">
+                                                <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                                            </div>
+                                            <div class="bottom" style="border-top:1px solid #EAEAEA">
+                                                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate" style="text-align:right">
+                                                    <ul class="pagination">
+
+                                                    </ul>
+                                                    </div>
+                                                 <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="profile">
+                                            <div class="card-body">
+                                                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                                    <div class="top">
+                                                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    </div>
+
+                                                    <table  class="datatable table table-striped dataTable " cellspacing="0" width="100%" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th class="sorting_asc" >产品编号</th>
+                                                            <th class="sorting_asc" >产品名称</th>
+                                                            <th class="sorting"   >销售数量</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr role="row" class="odd">
+                                                        {% verbatim myblock %}
+                                                             <tr v-for = 'itme in up_date' class="o_hide" :class="{o_show:up_date}">
+                                                                  <td>
+                                                                     {{ itme.pro_num }}
+                                                                  </td>
+                                                                  <td>
+                                                                     {{ itme.pro_name }}
+                                                                  </td>
+                                                                  <td>
+                                                                     {{ itme.sale_num }}
+                                                                  </td>
+                                                             </tr>
+                                                             <tr v-if="!up_date">
+                                                                <td class="sorting_1" colspan="6" style="text-align: center">暂无上传的数据</td>
+                                                             </tr>
+                                                        {% endverbatim myblock %}
+
+                                                    </tbody>
+                                                </table>
+                                                <div class="loading" :class="{loading_hide:search_end}">
+                                                    <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                                                </div>
+                                                 <div class="card-body my_card" style="border-top: 1px solid #EAEAEA;">
+                                                     <h5>请选择cvs文件上传</h5>
+                                                     <button type="button" class="btn btn-info" @click="up_click">上传文件</button>
+                                                     <button type="button" class="btn btn-info" @click="save">保存文件</button>
+                                                     <input type="file" id="exampleInputFile" name="file"  multiple="multiple" @change='onUpload' style=" width: 0px;height: 0px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{#            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDefault">#}
+{#                Launch demo modal#}
+{#            </button>#}
+            <div class="modal fade" id="modalDefault" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">更改的产品名:<span></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>产品编号为:</p>
+                            <input type="text" class="form-control" placeholder="填写销售数目" v-model="sale_num">
+                            <p>*请注意确认销售信息是否正确</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="one_sale_save">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+            </div>
+    </div>
+</div>
+{% endblock %}
+{% block model_script %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        var now=0;
+        $(function(){
+
+            var csrf_token='{{ csrf_token }}';
+            var save_data = '';
+            var start=0;
+            var limit=10;
+            var re ={
+                'pro_name':'',
+                'pro_price':'',
+                'pro_num':'',
+                'pro_stock':'',
+                'pro_units':'',
+                'pro_img':'',
+                'pro_short':'',
+                'pro_desc':''
+
+            };
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+                    search_key:'',
+                    search_date:'',
+                    up_date:'',
+                    search_end:true,
+                    is_search:false,
+                    reg:re,
+                    sale_num:'',
+                    check_index:undefined
+                 },
+                 methods: {
+                    submit:function(event){
+                        this.search_end = false;
+                        url ='{% url 'users:pro_search_handle' %}';
+
+                        data= {
+                            'search_key':this.search_key,
+                            //c
+                            'csrfmiddlewaretoken':csrf_token
+                        };
+                        type = 'post';
+                        var func =function(data){
+                            myapp.is_search = true;
+                            myapp.search_end = true;
+                            if(data.code ===200){
+                                console.log(data.data);
+                                myapp.search_date = data.data
+                            }else{
+                                console.log(data)
+                            }
+                        };
+                        my_ajax(url,type,data,func)
+                    },
+                    one_sale:function(index){
+                        this.sale_num = '';
+                        $('#myModalLabel').find('span').html(this.search_date[index].pro_name);
+                        $('.modal-body').find('p').eq(0).html('产品编号:'+this.search_date[index].pro_num);
+                        this.check_index=index
+                    },
+                    one_sale_save:function(e){
+                        console.log(this.search_date[this.check_index].pro_id);
+                        var url = '{% url 'users:one_sale_save' %}';
+                        var data= {'pid':this.search_date[this.check_index].pro_id,'out':this.sale_num,'csrfmiddlewaretoken':csrf_token};
+                        var type='post';
+                        var func=function(data){
+                            if(data.code===200){
+                                myapp.search_date[myapp.check_index].sto_stock= data.data
+                            }else{
+                                alert('填写错误')
+                            }
+                        };
+                        my_ajax(url,type,data,func)
+                    },
+                    up_click:function(e){
+                        $('#exampleInputFile').click()
+                    },
+                    onUpload:function(e){
+                        var  up = $("#exampleInputFile");
+                        var formData = new FormData();
+                        formData.append("csrfmiddlewaretoken", csrf_token);
+                        formData.append("file", up.get(0).files[0]);
+                        var url ='{% url 'users:bulk_sale' %}';
+                        var type='post';
+                        var data = formData;
+                        var func= function(data){
+                            //将值传入vue中
+                            if(data.code===200){
+                                myapp.up_date = data.data;
+                                $(".my_card h5").html('已经选择'+up.get(0).files[0].name+',点击保存上传');
+                            }else{
+                                alert(data.data);
+                                var obj = $('#exampleInputFile');
+                                initial(obj)
+                            }
+
+                        };
+                        my_ajax(url,type,data,func,true)
+                    },
+                    //todo 增加拆分
+                    save:function(e){
+                        if(!this.up_date){
+                            alert('请先上传文件')
+                        }
+                        var url ='{% url 'users:bulk_sale_save' %}';
+                        var type='post';
+                        var data = re_data(JSON.stringify(this.up_date),csrf_token);
+                        var func= function(data){
+                            //将值传入vue中
+                            if(data.code===200){
+                                alert('成功上传');
+                                var file = $("#exampleInputFile");
+                                initial(file);
+                                myapp.up_date=''
+                            }else{
+                                alert(data.data)
+                            }
+
+                        };
+                        my_ajax(url,type,data,func)
+                    }
+
+             }
+             });
+
+             wrappers_load();
+        })
+    </script>
+{% endblock %}

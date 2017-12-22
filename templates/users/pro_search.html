@@ -1,0 +1,155 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+{% block title %}用户首页{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                    <div class="page-title">
+                        <span class="title">列表搜索</span>
+                        <div class="description">用户数据进行搜索</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <div class="card-title">
+                                    <div class="title">列表</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                        <div class="top" v-if="is_search">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                            <label>
+                                                搜索:<input type="search"  v-model="search_key"   class="form-control input-sm" placeholder="输入用户名/编号/手机号开始搜索" aria-controls="DataTables_Table_0" @keydown.enter="submit">
+                                            </label>
+                                        </div>
+                                        <div class="clear"></div>
+                                        </div>
+                                        <div v-if="!is_search" class="no_search">
+                                            <input placeholder="请输入条件,开始搜索" @keydown.enter="submit" v-model="search_key">
+                                        </div>
+                                        <table :class='{tb_show:is_search}' class="table tb_hide table-hover" cellspacing="0" width="100%" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting"  >产品图片</th>
+                                                <th class="sorting_asc" >产品编号</th>
+                                                <th class="sorting"   >产品名</th>
+                                                <th class="sorting"   >产品价格</th>
+                                                <th class="sorting"  >产品库存</th>
+                                                <th class="sorting"  >产品描述</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% verbatim myblock %}
+                                             <tr v-for = '(itme,index) in search_date' class="odd">
+
+                                                  <td>
+                                                    <img :src="'/'+itme.pro_img">
+                                                  </td>
+                                                  <td>
+                                                     {{ itme.pro_num }}
+                                                  </td>
+                                                  <td>
+                                                     {{ itme.pro_name }}
+                                                  </td>
+
+                                                 <td>
+                                                     {{ itme.pro_price }}/{{ itme.pro_units }}
+                                                  </td>
+                                                  <td>
+                                                     {{ itme.sto_stock }}
+                                                  </td>
+                                                 <td>
+                                                     {{ itme.pro_short }}
+                                                  </td>
+                                             </tr>
+                                             <tr v-if="!search_date">
+                                                <td class="sorting_1" colspan="6" style="text-align: center">暂无数据</td>
+                                             </tr>
+                                        {% endverbatim myblock %}
+
+                                        </tbody>
+                                    </table>
+                                    <div class="loading" :class="{loading_hide:search_end}">
+                                        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                                    </div>
+                                    <div class="bottom" style="border-top:1px solid #EAEAEA">
+                                            <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate" style="text-align:right">
+                                            <ul class="pagination">
+
+                                            </ul>
+                                            </div>
+                                         <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+        </div>
+</div>
+{% endblock %}
+{% block model_script %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(function(){
+            var csrf_token='{{ csrf_token }}';
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+                    search_key:'',
+                    search_date:'',
+                    search_end:true,
+                    is_search:false,
+                    is_one:true
+                 },
+                 methods:{
+                    submit:function(event){
+                        this.search_end = false;
+                        url ='{% url 'users:pro_search_handle' %}';
+
+                        data= {
+                            'search_key':this.search_key,
+                            //c
+                            'csrfmiddlewaretoken':csrf_token
+                        };
+                        type = 'post';
+                        var func =function(data){
+                            myapp.is_search = true;
+                            myapp.search_end = true;
+                            if(data.code ===200){
+                                console.log(data.data);
+                                myapp.search_date = data.data
+                            }else{
+                                console.log(data)
+                            }
+                        };
+                        my_ajax(url,type,data,func)
+                    }
+                 }
+             })
+        })
+    </script>
+{% endblock %}

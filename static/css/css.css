@@ -1,0 +1,356 @@
+/* -------------------------------------------------------
+
+	Description: Web 2.0 Login Form
+	Version: 1.0
+	Author: Anli Zaimi
+	Author URI: http://azmind.com
+
+------------------------------------------------------- */
+
+
+/* ------- This is the CSS Reset ------- */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
+abbr, acronym, address, big, cite, code, del,
+dfn, em, img, ins, kbd, q, s, samp, small,
+strike, strong, sub, sup, tt, var, u, i, center,
+dl, dt, dd, ol, ul, li, fieldset, form, label,
+legend, table, caption, tbody, tfoot, thead, tr,
+th, td, article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup, menu,
+nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* ------- HTML5 display-role reset for older browsers ------- */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html{
+    height:100%;
+}
+
+/* ------- Remove Chrome's border around active fields ------- */
+
+*:focus {
+	outline: none;
+}
+
+/* ------- Disable background and border for input fields ------- */
+
+input {
+	background: transparent;
+	border: 0;
+}
+
+
+body {
+    height:100%;
+    color: #555;
+    font-size: 15px;
+    line-height: 1.7;
+    font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',Arial,sans-serif;
+    background: #f7fafc;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+/***canvas**/
+canvas{
+  display:block;
+  vertical-align:bottom;
+}
+
+
+/* ---- stats.js ---- */
+
+.count-particles{
+  background: #000022;
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 80px;
+  color: #13E8E9;
+  font-size: .8em;
+  text-align: left;
+  text-indent: 4px;
+  line-height: 14px;
+  padding-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+.js-count-particles{
+  font-size: 1.1em;
+}
+
+#stats,
+.count-particles{
+  -webkit-user-select: none;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+#stats{
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+}
+
+.count-particles{
+  border-radius: 0 0 3px 3px;
+}
+
+
+/* ---- particles.js container ---- */
+
+#particles-js{
+  width: 100%;
+  height: 100%;
+  background-color: #f7fafc;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index: 1;
+}
+/*****login and reg****/
+.sign-button {
+    display: block;
+    padding: 0;
+    width: 100%;
+    font-size: 15px;
+    line-height: 33px;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    background: #80c3f7;
+    background: -webkit-linear-gradient(top,#80c3f7,#6bbaf8);
+    background: linear-gradient(to bottom,#80c3f7,#6bbaf8);
+    border: 1px solid #1D80CF;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 1px 1px rgba(50,50,50,.05);
+    outline: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+#myapp{
+    height:100%;
+}
+.sign-flow .view .input-wrapper, .sign-flow .view .button-wrapper, .sign-flow .view .signin-misc-wrapper, .sign-flow .view .other-signup-wrapper {
+    margin-top: 18px;
+    overflow:hidden;
+    position:relative;
+}
+.sign-flow {
+    text-align: center;
+}
+.clearfix:before, .clearfix:after {
+    display: table;
+    content: "";
+}
+.index-main {
+    text-align:center;
+    white-space: nowrap;
+    height: 100%;
+    min-height: 720px;
+    position:relative;
+    z-index:10;
+}
+
+.index-main:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -.25em
+}
+
+.index-main-body {
+    padding: 0;
+    min-height: 590px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    white-space: normal
+}
+.index-main-body {
+    padding: 0;
+    min-height: 590px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    white-space: normal;
+}
+.index-header .logo {
+    margin: 0 auto;
+    width: 160px;
+    height: 74px;
+    font-size: 40px;
+    line-height: 74px;
+    text-align: center;
+    color:#0f88eb;
+}
+.index-header .subtitle {
+    margin: 30px 0 20px;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1;
+    text-align:center;
+}
+.index-tab-navs {
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+.index-tab-navs .navs-slider {
+    position: relative;
+    display: inline-block;
+}
+
+.index-tab-navs .navs-slider div {
+    float: left;
+    width: 4em;
+    line-height: 35px;
+    opacity: .7;
+    -ms-filter: "alpha(Opacity=70)";
+    -webkit-transition: opacity .15s,color .15s;
+    transition: opacity .15s,color .15s;
+    cursor: pointer;
+}
+.index-tab-navs .navs-slider div.active {
+    opacity: 1;
+    -ms-filter: "alpha(Opacity=100)";
+    color: #0f88eb;
+}
+.index-tab-navs .navs-slider .navs-slider-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 0 .8em;
+    width: 2.4em;
+    height: 2px;
+    background: #0f88eb;
+    -webkit-transition: left .15s ease-in;
+    transition: left .15s ease-in;
+}
+.index-tab-navs .navs-slider[data-active-index="1"] .navs-slider-bar {
+    left: 4em;
+}
+.sign-flow .view {
+    float: none;
+    margin: auto;
+    width: 300px;
+    text-align: left;
+    font-size: 14px;
+}
+.sign-flow .view .group-inputs {
+    padding: 1px 0;
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+}
+.sign-flow .view .input-wrapper {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+}
+
+.sign-flow .view .input-wrapper input {
+    margin: 0;
+    padding: 8px 10px;
+    width: 180px;
+    background: #e7f1f8;
+    line-height: 19px;
+    color: #555;
+    border: 1px solid #1672B9;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(15,82,135,.25), 0 1px 0 rgba(255,255,255,.15);
+}
+.sign-flow .view .input-wrapper input {
+    padding: 1em .8em;
+    width: 100%;
+    box-sizing: border-box;
+}
+.sign-flow .view .input-wrapper input, .sign-flow .view .input-wrapper input:focus {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+}
+.sign-flow .view .input-wrapper+.input-wrapper {
+    border-top: 1px solid #e8e8e8;
+}
+.sign-flow .sign-button {
+    background: #0f88eb;
+    box-shadow: none;
+    border: 0;
+    border-radius: 3px;
+    line-height: 41px;
+    color: #fff;
+}
+.select_hide{
+    display:none;
+}
+.select{
+    display: block;
+}
+.modal-dialog{
+    z-index:1045;
+}
+
+.modal-backdrop.fade{
+    opacity: 0;
+    transition:opacity .5s;
+    -webkit-transition:opacity .5s;
+    -moz-transition:opacity .5s;
+
+}
+.fade.in{
+    opacity: 1;
+    display:block;
+}
+.modal-backdrop.fade.in{
+    display:block;
+    opacity: 0.5;
+}
+.over{
+    z-index: 1;
+}
+.error_span{
+    position:absolute;
+    top:0;
+    right: -100%;
+    height:47px;
+    line-height: 47px;
+    transition:right .5s;
+    -webkit-transition:right .5s;
+    -moz-transition:right .5s;
+    color:#d43f3a;
+}
+
+.show_error{
+    right:10px;
+}

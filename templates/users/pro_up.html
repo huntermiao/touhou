@@ -1,0 +1,402 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <script type="text/javascript" src="{% static 'tinymce/tiny_mce.js' %}"></script>
+{% endblock %}
+{% block title %}库存数据录入{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                <div class="page-title">
+                    <span class="title">库存数据录入</span>
+                    <div class="description">通过上传数据进行产品数据录入/批量录入</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="title">录入库存数据</div>
+                                </div>
+                            </div>
+                            <div class="card-body no-padding">
+                                <div role="tabpanel">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">单条录入</a></li>
+                                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">批量导入</a></li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="home">
+                                                <div class="card-body">
+                                                    <div class="pro_save">
+                                                        <div class="form-group">
+                                                            <label >产品名</label>
+                                                            <input type="text" class="form-control"  name= 'pro_name' placeholder="请输入产品名" v-model="reg.pro_name">
+                                                            <span class="error_span" :text-content.prop="my_error.pro_name_error" :class="{show_error:my_error.pro_name_error}"> </span>
+                                                        </div>
+                                                       <div class="form-group">
+                                                            <label >产品编号</label>
+                                                            <input type="number" class="form-control" name= 'pro_num' placeholder="请输入产品编号" v-model="reg.pro_num">
+                                                            <span class="error_span" :text-content.prop="my_error.pro_num_error" :class="{show_error:my_error.pro_num_error}"> </span>
+                                                       </div>
+                                                        <div class="form-group">
+                                                            <label >产品价格</label>
+                                                            <input type="number" class="form-control" name= 'pro_price'   placeholder="请输入产品价格" v-model="reg.pro_price">
+                                                            <span class="error_span" :text-content.prop="my_error.pro_price_error" :class="{show_error:my_error.pro_price_error}"> </span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label >产品单位</label>
+                                                            <input type="text" class="form-control"  name= 'pro_units' placeholder="请输入产品单位" v-model="reg.pro_units">
+                                                            <span class="error_span" :text-content.prop="my_error.pro_units_error" :class="{show_error:my_error.pro_units_error}"> </span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label >产品数量</label>
+                                                            <input type="text" class="form-control"  name= 'pro_stock' placeholder="请输入产品数量" v-model="reg.pro_stock">
+                                                            <span class="error_span" :text-content.prop="my_error.pro_stock_error" :class="{show_error:my_error.pro_stock_error}"> </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pro_desc">
+                                                        <p >请输入产品描述</p>
+                                                        <input type="text" class="form-control"  name = 'pro_short' placeholder="请输入产品简述" maxlength="50" v-model="reg.pro_short">
+                                                    </div>
+                                                    <div class="pro_short">
+                                                        <p >请输入产品描述</p>
+                                                        <textarea class="form-control" id="elm1" rows="2"></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div v-if="reg.pro_img" class="up_min_img">
+                                                            <img :src="reg.pro_img">
+                                                        </div>
+                                                        <input type="file" id="unImg" @change='upImg' style="width: 0;height:0">
+                                                        <h5>请选择图片文件上传</h5>
+                                                        <button type="button" class="btn btn-info" @click="up_img">上传文件</button>
+                                                    </div>
+                                                     <div class="form-group" style="text-align: right">
+                                                        <button type="button" class="btn btn-info" @click="save">保存记录</button>
+                                                     </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="profile">
+                                            <div class="card-body">
+                                                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                                    <div class="top">
+                                                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    </div>
+
+                                                    <table  class="datatable table table-striped dataTable " cellspacing="0" width="100%" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th class="sorting_asc" >产品图片</th>
+                                                            <th class="sorting_asc" >产品名</th>
+                                                            <th class="sorting"   >产品编号</th>
+                                                            <th class="sorting"   >产品价格</th>
+                                                            <th class="sorting"   >产品单位</th>
+                                                            <th class="sorting"  >产品数量</th>
+                                                            <th class="sorting"   >产品描述</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr role="row" class="odd">
+                                                        {% verbatim myblock %}
+                                                             <tr v-for = 'itme in up_date' class="o_hide" :class="{o_show:up_date}">
+                                                                  <td>
+                                                                     {{ itme.pro_img }}
+                                                                  </td>
+                                                                  <td>
+                                                                     {{ itme.pro_name }}
+                                                                  </td>
+                                                                  <td>
+                                                                     {{ itme.pro_num }}
+                                                                  </td>
+
+                                                                 <td>
+                                                                     {{ itme.pro_price }}
+                                                                  </td>
+                                                                  <td>
+                                                                     {{ itme.pro_units }}
+                                                                  </td>
+                                                                 <td>
+                                                                     {{ itme.sto_stock }}
+                                                                 </td>
+                                                                 <td>
+                                                                     {{ itme.pro_short }}
+                                                                 </td>
+                                                             </tr>
+                                                             <tr v-if="!up_date">
+                                                                <td class="sorting_1" colspan="6" style="text-align: center">暂无上传的数据</td>
+                                                             </tr>
+                                                        {% endverbatim myblock %}
+
+                                                    </tbody>
+                                                </table>
+                                                <div class="loading" :class="{loading_hide:search_end}">
+                                                    <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                                                </div>
+                                                <div class="bottom" style="border-top:1px solid #EAEAEA">
+                                                    {% verbatim myblock %}
+                                                    <div class="dataTables_paginate paging_simple_numbers" style="text-align:right" v-if="page_num">
+                                                        <ul class="pagination">
+                                                            <li class="paginate_button previous" :class="{disabled:now_page==1}">
+                                                            <span >上一页</span>
+                                                            </li>
+                                                            <li class="paginate_button " v-for = "n in page_num" :class="{active:n==now_page}">
+                                                                <span @click="flip_pages(n)">{{ n }}</span>
+                                                            </li>
+                                                            <li class="paginate_button next" :class="{disabled:now_page==page_num}">
+                                                            <span >下一页</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    {% endverbatim myblock %}=
+                                                 <div class="clear"></div>
+                                                </div>
+                                                 <div class="card-body my_card">
+                                                     <h5>请选择cvs文件上传</h5>
+                                                     <button type="button" class="btn btn-info" @click="up_click">上传文件</button>
+                                                     <button type="button" class="btn btn-info" @click="save_bulk">保存文件</button>
+                                                     <input type="file" id="exampleInputFile" name="file"  multiple="multiple" @change='onUpload' style=" width: 0px;height: 0px;">
+                                                </div>
+                                                <div class="img_up">
+                                                    <span>上传进度</span>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                                            0%
+                                                        </div>
+                                                    </div>
+                                                    <div class="right_text">
+                                                        <button type="button" class="btn btn-info" @click="bimg_click">上传图片</button>
+                                                    </div>
+                                                    <input type="file" id="BImg" name="file"  multiple="multiple" @change='Bulk_img_upload' style=" width: 0px;height: 0px;">
+                                                </div>
+                                                <div class="alert fresh-color alert-danger" role="alert">
+                                                    <strong>注意!</strong> 请严格按照产品编号.jpg名进行上传!!!如果上传错误可能无法正确显示
+                                                </div>
+                                            </div>
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+            </div>
+    </div>
+</div>
+{% endblock %}
+{% block model_script %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        var post_error={
+            pro_name_error:'',
+            pro_price_error:'',
+            pro_num_error:'',
+            pro_stock_error:'',
+            pro_units_error:'',
+            pro_img_error:''
+        };
+        var now=0;
+        $(function(){
+
+            var csrf_token='{{ csrf_token }}';
+            var save_data = '';
+            var start=0;
+            var limit=10;
+            var re ={
+                'pro_name':'',
+                'pro_price':'',
+                'pro_num':'',
+                'pro_stock':'',
+                'pro_units':'',
+                'pro_img':'',
+                'pro_short':'',
+                'pro_desc':''
+
+            };
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+                    search_key:'',
+                    up_date:'',
+                    search_end:true,
+                    is_search:false,
+                    reg:re,
+                    file_name:'',
+                    page_num:0,
+                    now_page:1,
+                    limit:0,
+                    img_up_end:false,
+                    my_error:post_error
+                 },
+                 methods:{
+                    onUpload:function(e){
+                        var  up = $("#exampleInputFile");
+                        var formData = new FormData();
+                        formData.append("csrfmiddlewaretoken", csrf_token);
+                        formData.append("file", up.get(0).files[0]);
+                        console.log(up.get(0).files[0]);
+                        var url ='{% url 'users:batch_upload' %}';
+                        var type='post';
+                        var data = formData;
+                        var func= function(data){
+                            //将值传入vue中
+                            if(data.code===200){
+                                myapp.file_name = data.data;
+                                myapp.page(data.lens)
+                            }else{
+                                alert(data.data)
+                            }
+
+                        };
+                        my_ajax(url,type,data,func,true)
+                    },
+                    upImg:function(e){
+                        var  up = $("#unImg");
+                        var formData = new FormData();
+                        formData.append("csrfmiddlewaretoken", csrf_token);
+                        formData.append("file", up.get(0).files[0]);
+
+                        $(".form-group h5").html('已经选择'+up.get(0).files[0].name+',点击保存上传');
+                        var url ='{% url 'users:my_imgFile' %}';
+                        var type='post';
+                        var data = formData;
+                        var func= function(data){
+                            if(data.code === 200){
+                                myapp.reg.pro_img = "/"+data.data
+                            }
+                        };
+                        my_ajax(url,type,data,func,true)
+                    },
+                    up_click:function (e) {
+                        $('#exampleInputFile').click()
+                    },
+                    up_img:function(e){
+                        $('#unImg').click()
+                    },
+                    Bulk_img_upload:function(e){
+                        var bulk_img = $('#BImg');
+                        var formData=new FormData();
+                        formData.append("csrfmiddlewaretoken", csrf_token);
+                        var url ='{% url 'users:Bulk_img' %}';
+                        var type='post';
+                        var data = formData;
+                        len = bulk_img.get(0).files.length;
+                        var func= function(data){
+                            if(data.code === 200){
+                                if(len-1===0 && now===1){
+                                   myapp.img_up_end = true;
+                                }
+                                if(now === len-1){
+                                   myapp.img_up_end = true;
+                                }
+                            }
+                        };
+
+                        for(var i=0;i<bulk_img.get(0).files.length;i++){
+                           formData.append("img", bulk_img.get(0).files[i]);
+                           my_ajax(url,type,data,func,true,len)
+                        }
+
+                    },
+                    bimg_click:function(){
+                        $('#BImg').click();
+                        now = 0;
+                        progress_bat_re($('.progress-bar'));
+                    },
+                    save:function(e){
+                        $('.pro_save input').blur();
+                        console.log(this.reg);
+                        if(!this.reg.pro_img){
+                            alert('请上传产品图片')
+                        }
+                        var url = '{% url 'users:my_stock_up' %}';
+                        var type = 'post';
+                        var data = re_data(JSON.stringify(this.reg),csrf_token);
+                        var func=function(data){
+
+
+                        };
+                        my_ajax(url,type,data,func)
+                    },
+                    upload:function(e){
+                        var url = '{% url 'users:save_csv' %}';
+                        var type = 'post';
+                        var data = re_data(JSON.stringify(save_data),csrf_token);
+                        console.log(data);
+                        var func=function(data){
+
+
+                        };
+                        my_ajax(url,type,data,func)
+                    },
+                     page:function(lens){
+                        this.limit = 10;
+                        this.page_num = pagination(this.limit,lens);
+                        this.flip_pages(1)
+                     },
+                     flip_pages:function(page){
+                         this.now_page = page;
+                         var start = (this.now_page-1)*this.limit;
+                         var urls= '{% url 'users:bulk_pagination'%}';
+                         var type = 'get';
+                         var data = {'file_name':this.file_name,'start':start,'limit':this.limit};
+                         var func =function(data){
+                             myapp.up_date = data.data
+                         };
+                         my_ajax(urls,type,data,func)
+                     }
+                     ,save_bulk:function(e){
+                         if(!this.file_name){
+                             alert('请选择上传文件');
+                             return
+                         }
+                         if(!this.img_up_end){
+                             alert('请上传图片');
+                             return
+                         }
+                         var urls = '{% url 'users:bulk_save' %}';
+                         var type='post';
+                         var data={'file_name':this.file_name,"csrfmiddlewaretoken": csrf_token};
+                         var func = function(data){
+                             if(data.code===200){
+                                 console.log(data.data);
+
+                             }else{
+                                 alert(data.data)
+                             }
+                         };
+                         my_ajax(urls,type,data,func)
+                     }
+                 }
+             });
+             tinyMCE.init({
+                'mode': 'textareas',
+                'theme': 'advanced',
+                'width': 800,
+                'height': 600,
+                'language': 'zh-cn'
+            });
+             wrappers_load();
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+{% block title %}用户首页{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                    <div class="page-title">
+                        <span class="title">供销存统计</span>
+                        <div class="description">供销存统计</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <div class="card-title">
+                                    <div class="title">列表</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                        <div class="top">
+                                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                            <label>
+                                                搜索:<input type="search"  v-model="search_key"   class="form-control input-sm" placeholder="输入产品名搜索" aria-controls="DataTables_Table_0" @keydown.enter="submit">
+                                            </label>
+                                        </div>
+                                        <div class="clear"></div>
+                                        </div>
+                                        <table  class="table  table-hover" cellspacing="0" width="100%" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting"  >产品名</th>
+                                                <th class="sorting_asc" >产品编号</th>
+                                                <th class="sorting"   >月销售</th>
+                                                <th class="sorting"   >月初库存</th>
+                                                <th class="sorting"  >当前库存</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% load users_filters %}
+                                        {% for i in current_data %}
+
+                                             <tr >
+                                                  <td>
+                                                     {{ i.pro_name }}
+                                                  </td>
+                                                  <td>
+                                                     {{ i.pro_num }}
+                                                  </td>
+                                                 <td>
+                                                     {{ i | my_sto_out }}
+                                                  </td>
+                                                  <td>
+                                                     {{ i | sto_before }}
+                                                  </td>
+                                                 <td>
+                                                     {{ i.storage_set.last.sto_stock }}
+                                                  </td>
+                                             </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                    <div class="loading" :class="{loading_hide:search_end}">
+                                        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                                    </div>
+                                    <div class="bottom">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate" style="text-align:right">
+                                        <ul class="pagination">
+                                            {% if current_data.has_previous %}
+                                            <li class="paginate_button previous " id="DataTables_Table_0_previous">
+                                            <a href="?page={{ current_data.previous_page_number }}" >上一页</a>
+                                            </li>
+                                            {% else %}
+                                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                                <span >上一页</span>
+                                                </li>
+                                            {% endif %}
+                                            {% for index in paginator.page_range %}
+                                                {% if index == current_data.number %}
+                {#                                    获取当前选择的页面的页码#}
+                                                    <li class="paginate_button active">
+                                                        <a href="?page={{ index }}">{{ index }}</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="paginate_button ">
+                                                        <a href="?page={{ index }}" >{{ index }}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if current_data.has_next %}
+                                            <li class="paginate_button next" id="DataTables_Table_0_next">
+                                                <a href="?page={{ current_data.next_page_number }}" >下一页</a>
+                                            </li>
+                                            {% else %}
+                                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
+                                                <span >下一页</span>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+        </div>
+</div>
+{% endblock %}
+{% block model_script %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(function(){
+            var csrf_token='{{ csrf_token }}';
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+                    search_key:'',
+                    search_date:'',
+                    search_end:true,
+                    is_search:false,
+                    is_one:true
+                 },
+                 methods:{
+                    submit:function(event){
+                        this.search_end = false;
+                        url ='{% url 'users:pro_search_handle' %}';
+
+                        data= {
+                            'search_key':this.search_key,
+                            //c
+                            'csrfmiddlewaretoken':csrf_token
+                        };
+                        type = 'post';
+                        var func =function(data){
+                            myapp.is_search = true;
+                            myapp.search_end = true;
+                            if(data.code ===200){
+                                console.log(data.data);
+                                myapp.search_date = data.data
+                            }else{
+                                console.log(data)
+                            }
+                        };
+                        my_ajax(url,type,data,func)
+                    }
+                 }
+             })
+        })
+    </script>
+{% endblock %}

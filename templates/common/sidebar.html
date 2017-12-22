@@ -1,0 +1,89 @@
+<div class="side-menu sidebar-inverse">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="side-menu-container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <div class="icon fa fa-paper-plane"></div>
+                    <div class="title">东方女人1.0</div>
+                </a>
+                <button type="button" class="navbar-expand-toggle pull-right visible-xs">
+                    <i class="fa fa-times icon"></i>
+                </button>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="{% url 'users:index' %}">
+                        <span class="icon fa fa-tachometer"></span><span class="title">首页</span>
+                    </a>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element">
+                        <span class="icon glyphicon glyphicon-user"></span><span class="title">用户数据管理</span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li><a href="{% url 'users:table' %}">查看所有用户</a>
+                                </li>
+                                <li>
+                                    <a href="{% url  'users:datatable' %}">用户名检索</a>
+                                </li>
+{#                                {% if staff.staff_permissions %}#}
+                                <li>
+                                    <a href="{% url  'users:datatable_write' %}">用户数据录入</a>
+                                </li>
+{#                                {% endif %}#}
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-form">
+                        <span class="icon glyphicon glyphicon-search"></span><span class="title">销售数据</span>
+                    </a>
+                    <div id="dropdown-form" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="{% url 'users:sto_search' %}">查询供销统计</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'users:sale_count' %}">销售统计</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#component-example">
+                        <span class="icon glyphicon glyphicon-pencil"></span><span class="title">库存销售管理</span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="component-example" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li><a href="{% url 'users:pro_up' %}">产品库存录入</a>
+                                </li>
+                                <li><a href="{% url 'users:sales' %}">产品销售录入</a>
+                                </li>
+                                 <li>
+                                    <a href="{% url 'users:product_table' %}">全部库存数据</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'users:pro_search' %}">搜索库存数据</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="icon fa fa-thumbs-o-up"></span><span class="title">系统简介</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+</div>

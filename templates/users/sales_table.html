@@ -1,0 +1,226 @@
+{% extends 'common/base.html' %}
+{% load staticfiles %}
+{% block top %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/flat-blue.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+{% block title %}销售数据{% endblock %}
+{% block boday %}
+    <div class="flat-blue">
+        <div class="app-container">
+            <div class="row content-container">
+                {% include 'common/nav.html' %}
+                {% include 'common/sidebar.html'  %}
+
+                <!-- Main Content -->
+            <div class="side-body" id = 'vue'>
+                    <div class="page-title">
+                        <span class="title">销售数据</span>
+                        <div class="description">Sales data.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                                <div class="card-header">
+
+                                    <div class="card-title">
+                                    <div class="title">数据</div>
+                                    </div>
+                                </div>
+                                <div class="card-body sale_card">
+                                <div class="sub-title">
+                                    {% verbatim myblock %}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" v-cloak data-toggle="dropdown" aria-expanded="false">{{ year }} <span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu">
+                                           <li v-for="i in year_list" @click="getMother(i)">{{ i }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="btn-group" v-if="year !='请选择年份'">
+                                        <button type="button" class="btn btn-primary btn-success" v-cloak data-toggle="dropdown" aria-expanded="false">{{ mother }}<span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li v-for="i in 12" @click="getDay(i)">{{ i }}</li>
+                                        </ul>
+
+                                    </div>
+                                    <div class="btn-group" v-if="day_list !=''">
+                                        <button type="button" class="btn btn-primary btn-info" v-cloak data-toggle="dropdown" aria-expanded="false">{{ day }} <span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li v-for="i in day_list" @click="day=i">{{ i }}</li>
+                                        </ul>
+                                    </div>
+                                    {% endverbatim myblock %}
+                                    <button type="button" class="btn btn-info"><a :href="normal_href+'?year='+year+'&&mother='+
+                                    mother+'&&day='+day">查看</a></button>
+                                    <button type="button" class="btn btn-info" @click="save_xls">导出数据</button>
+                                </div>
+                                    <h5>*默认显示当日数据,如果要查询月数据请勿选择日期,查询年数据请勿选择月</h5>
+                                    <table class="table">
+
+                                        <thead>
+                                            <tr>
+                                                <th>产品图片</th>
+                                                <th>产品id</th>
+                                                <th>产品名</th>
+                                                <th>销售数量</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if current_data == None %}
+                                                <tr>
+                                                <td colspan="6" class="sorting_1" style="text-align: center;">暂无数据</td>
+                                                </tr>
+                                            {% else %}
+                                                {% for pro in current_data %}
+                                                <tr>
+                                                    <th scope="row"><img src="{{ pro.pro_img }}"></th>
+                                                    <td>{{ pro.pid }}</td>
+                                                    <td>{{ pro.name }}</td>
+                                                    <td>{{ pro.out }}</td>
+                                                    <td></td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate" style="text-align:right">
+                        <ul class="pagination">
+                            {% if current_data.has_previous %}
+                            <li class="paginate_button previous " id="DataTables_Table_0_previous">
+                            <a href="?page={{ current_data.previous_page_number }}" >上一页</a>
+                            </li>
+                            {% else %}
+                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                <span >上一页</span>
+                                </li>
+                            {% endif %}
+                            {% for index in paginator.page_range %}
+                                {% if index == current_data.number %}
+{#                                    获取当前选择的页面的页码#}
+                                    <li class="paginate_button active">
+                                        <a href="?page={{ index }}">{{ index }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="paginate_button ">
+                                        <a href="?page={{ index }}" >{{ index }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if current_data.has_next %}
+                            <li class="paginate_button next" id="DataTables_Table_0_next">
+                                <a href="?page={{ current_data.next_page_number }}" >下一页</a>
+                            </li>
+                            {% else %}
+                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
+                                <span >下一页</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <footer class="app-footer">
+                <div class="wrapper">
+                    <span class="pull-right">1.0 <a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright. More Templates <a href="" target="_blank" title="模板之家">东方女人</a>
+                </div>
+            </footer>
+        </div>
+</div>
+{% endblock %}
+{% block model_script %}
+    <script type="text/javascript" src="{% static 'js/wrappers.js' %}"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        function check_year(year){
+            if(year%4===0){
+                if(year%100 ===0){
+                    if(year%400 ===0){
+                        return true
+                    }
+                }else{
+                    return true
+                }
+            }else{
+                return false
+            }
+        }
+        var search =decodeURI(window.location.search);
+        var re=new RegExp('year=(.*)&&mother=(.*)&&day=(.*)','ig');
+        var search_list=re.exec(search);
+        var normal_href = '{% url 'users:sale_count' %}';
+        var save_herf ='{% static 'upload' %}';
+        var csrf_token='{{ csrf_token }}';
+        $(function(){
+           var big =[1,3,5,7,8,10,12];
+             var myapp = new Vue({
+                 el: '#vue',
+                 data:{
+                     year:'请选择年份',
+                     year_list:[2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2030],
+                     mother:'请选择月份',
+                     day:'请选择日期',
+                     day_list:'',
+                     normal_href:normal_href
+
+                 },
+                 methods:{
+                     getMother:function(i){
+                         this.year=i;
+                         this.mother='请选择月份';
+                         this.day_list='';
+                     },
+                     getDay:function(i){
+                            this.mother=i;
+                            if(big.indexOf(i)>-1){
+                                this.day_list=31
+                            }else if(i===2){
+                                if(check_year(this.year)){
+                                    this.day_list=29
+                                }else{
+                                    this.day_list=28
+                                }
+
+                            }else{
+                                this.day_list=30
+                            }
+                     },
+                     save_xls:function(){
+                            var url = '{% url 'users:down_load' %}';
+                            var type = 'post';
+                            var save_data={
+                                'year':this.year,
+                                'mother':this.mother,
+                                'day':this.day
+                            };
+                            var src='/static/upload/';
+                            var data = re_data(JSON.stringify(save_data),csrf_token);
+                            var func=function(data){
+                                console.log(data);
+                                if(data.code===200){
+                                    window.location=src+data.data;
+                                }else{
+                                    alert(data.data)
+                                }
+{#                                window.open(save_herf)#}
+                            };
+                            my_ajax(url,type,data,func);
+
+                     }
+                 }
+
+             });
+            myapp.year=search_list[1];
+            myapp.mother=search_list[2];
+            myapp.day=search_list[3];
+        })
+    </script>
+{% endblock %}

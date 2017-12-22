@@ -1,0 +1,35 @@
+
+from django.conf.urls import include, url
+from normal_user import  views
+
+urlpatterns = [
+    url(r'^login/',views.login,name='login' ),
+    url(r'^table/',views.table,name='table' ),
+    url(r'^logout/',views.logout,name='logout' ),
+    url(r'^datatable/',views.datatable,name='datatable' ),
+    url(r'^datatable_write/',views.datatable_write,name='datatable_write' ),
+    url(r'^search_handle/',views.search_handle,name='search_handle' ),
+    url(r'^$',views.index,name='index' ),
+    url(r'^login_handle/',views.login_handle,name='login_handle' ),
+    url(r'^register_handle/',views.register_handle,name='register_handle' ),
+    url(r'^my_file/',views.my_file,name='my_file' ),
+    url(r'^save_csv/',views.save_csv,name='save_csv' ),
+    url(r'^product_table/',views.product_table,name='product_table' ),
+    url(r'^pro_search/',views.pro_search,name='pro_search' ),
+    url(r'^pro_up/',views.pro_up,name='pro_up' ),
+    url(r'^pro_search_handle/',views.pro_search_handle,name='pro_search_handle' ),
+    url(r'^my_imgFile/',views.my_imgFile,name='my_imgFile' ),
+    url(r'^my_stock_up/',views.my_stock_up,name='my_stock_up' ),
+    url(r'^batch_upload/',views.batch_upload,name='batch_upload' ),
+    url(r'^Bulk_img/',views.Bulk_img,name='Bulk_img' ),
+    url(r'^bulk_pagination/',views.bulk_pagination,name='bulk_pagination' ),
+    url(r'^bulk_save/',views.bulk_save,name='bulk_save' ),
+    url(r'^sales/',views.sales,name='sales' ),
+    url(r'^one_sale_save/',views.one_sale_save,name='one_sale_save' ),
+    url(r'^bulk_sale/',views.bulk_sale,name='bulk_sale' ),
+    url(r'^bulk_sale_save/',views.bulk_sale_save,name='bulk_sale_save' ),
+    url(r'^sale_count/',views.sale_count,name='sale_count' ),
+    url(r'^down_load/',views.down_load,name='down_load' ),
+    url(r'^sto_search/',views.sto_search,name='sto_search' ),
+    url(r'^get_phone/',views.get_phone,name='get_phone' ),
+]
